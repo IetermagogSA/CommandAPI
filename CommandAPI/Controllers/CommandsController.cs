@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CommandAPI.Data;
+using CommandAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,18 +10,35 @@ namespace CommandAPI.Controllers
     [ApiController]
     public class CommandsController : ControllerBase
     {
+        private readonly ICommandAPIRepo _repository;
+
+        public CommandsController(ICommandAPIRepo repository)
+        {
+            _repository = repository;
+        }
+
         // GET: api/<CommandsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<Command>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var commands = _repository.GetAllCommands();
+            return Ok(commands);
         }
 
         // GET api/<CommandsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<Command> Get(int id)
         {
-            return "value";
+            var commandItem = _repository.GetCommandById(id);
+            if(commandItem == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return commandItem;
+            }
+
         }
 
         // POST api/<CommandsController>
@@ -37,6 +56,12 @@ namespace CommandAPI.Controllers
         // DELETE api/<CommandsController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
+        {
+        }
+
+        // DELETE api/<CommandsController>/5
+        [HttpDelete("{command}")]
+        public void Delete(Command command)
         {
         }
     }
