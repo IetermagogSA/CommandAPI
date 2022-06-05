@@ -39,7 +39,7 @@ namespace CommandAPI.Data
 
         public void UpdateCommand(Command command)
         {
-            throw new NotImplementedException();
+            // Nothing to do here -- Because we are using EF Core, the datacontext will take care of the update for us
         }
     }
 }

@@ -2,6 +2,7 @@ using CommandAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using AutoMapper;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,13 @@ builder.Services.AddScoped<ICommandAPIRepo, SQLCommandAPIRepo>();
 
 // Add support for mapping models to dto 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Add support for the patch command
+builder.Services.AddControllers().AddNewtonsoftJson(s =>
+{ 
+    s.SerializerSettings.ContractResolver = new
+    CamelCasePropertyNamesContractResolver();
+});
 
 var app = builder.Build();
 
