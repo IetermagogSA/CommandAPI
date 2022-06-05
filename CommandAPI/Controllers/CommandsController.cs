@@ -1,4 +1,6 @@
-﻿using CommandAPI.Data;
+﻿using AutoMapper;
+using CommandAPI.Data;
+using CommandAPI.Dtos;
 using CommandAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,23 +13,25 @@ namespace CommandAPI.Controllers
     public class CommandsController : ControllerBase
     {
         private readonly ICommandAPIRepo _repository;
+        private readonly IMapper _mapper;
 
-        public CommandsController(ICommandAPIRepo repository)
+        public CommandsController(ICommandAPIRepo repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         // GET: api/<CommandsController>
         [HttpGet]
-        public ActionResult<IEnumerable<Command>> Get()
+        public ActionResult<IEnumerable<CommandReadDto>> Get()
         {
-            var commands = _repository.GetAllCommands();
-            return Ok(commands);
+            var commandItems = _repository.GetAllCommands();
+            return Ok(_mapper.Map<IEnumerable<CommandReadDto>>(commandItems));
         }
 
         // GET api/<CommandsController>/5
         [HttpGet("{id}")]
-        public ActionResult<Command> Get(int id)
+        public ActionResult<CommandReadDto> Get(int id)
         {
             var commandItem = _repository.GetCommandById(id);
             if(commandItem == null)
@@ -36,7 +40,7 @@ namespace CommandAPI.Controllers
             }
             else
             {
-                return commandItem;
+                return _mapper.Map<CommandReadDto>(commandItem);
             }
 
         }
