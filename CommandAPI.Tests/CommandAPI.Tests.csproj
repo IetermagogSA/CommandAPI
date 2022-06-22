@@ -21,4 +21,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CommandAPI\CommandAPI.csproj" />
+  </ItemGroup>
+
 </Project>
